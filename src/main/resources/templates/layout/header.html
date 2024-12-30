@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{index.html}">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" layout:fragment="header">
+        <a class="navbar-brand" th:href="@{/}">タスク進捗管理</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto">
+                <li sec:authorize="hasRole('ADMIN')" class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">管理画面</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown01">
+                        <a class="dropdown-item" th:href="@{/user}">ユーザ一覧</a>
+                        <!-- <a class="dropdown-item" href="#">メールで招待</a> -->
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">タスク</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown02">
+                        <a class="dropdown-item" th:href="@{/task/list}">タスク一覧</a>
+                        <a class="dropdown-item" th:href="@{/task/new}">新規作成</a>
+                        <a class="dropdown-item" th:href="@{/progress/chart}">ガントチャート</a>
+                    </div>
+                </li>
+            </ul>
+            <a href="#" th:href="@{/user/changeMyInfo}">
+                <img th:src="@{/images/profile.png}" alt="プロフィール" style="width: 36px; height: 36px;" class="mr-3"/>
+            </a>
+            <a sec:authorize="!isAuthenticated()" class="form-inline my-2 my-lg-0" href="#" th:href="@{/user/login}">ログイン</a>
+            <a sec:authorize="isAuthenticated()" class="form-inline my-2 my-lg-0" style="color: white" href="#" th:href="@{/user/logout}">ログアウト</a>
+        </div>
+    </nav>
+</body>
+</html>

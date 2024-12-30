@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<head>
+    <meta charset="UTF-8">
+    <title>404Error</title>
+</head>
+<body>
+<h1 th:text="${status} + ' ' + ${error}"></h1>
+<p>404エラーが起きています。</p>
+<form method="get" th:action="@{/}">
+    <button class="btn btn-link" type="submit">Topページに戻る</button>
+</form>
+
+</body>
+</html>

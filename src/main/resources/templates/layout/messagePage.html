@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <th:block th:fragment="message_head">
+        <!-- 専用 -->
+        <script th:src="@{/js/message.js}" defer></script>
+    </th:block>
+
+</head>
+<body>
+    <div id="message" layout:fragment="messagePage">
+        <div th:if="${successMessage}" class="alert alert-success text-center" role="alert">
+            <div th:text="${successMessage}"></div>
+        </div>
+        <div th:if="${delSuccessMessage}" class="alert alert-danger text-center" role="alert">
+            <div th:text="${delSuccessMessage}"></div>
+        </div>
+        <div th:if="${loginMessage}" class="alert alert-success text-center" role="alert">
+            <div th:text="${loginMessage}"></div>
+        </div>
+        <div th:if="${logoutMessage}" class="alert alert-warning text-center" role="alert">
+            <div th:text="${logoutMessage}"></div>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger text-center" role="alert">
+            <div th:text="${errorMessage}"></div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
+<head>
+    <title>Topページ</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:title="${title}">Topページ</title>
+    <th:block th:fragment="head">
+        <!-- 専用 -->
+        <link rel="stylesheet" th:href="@{/css/index.css}">
+        <script th:src="@{/js/duration.js}" defer></script>
+    </th:block>
+
+</head>
+<body>
+<div layout:fragment="content">
+    <main role="main">
+        <div class="container">
+            <h3 class="mt-2 mb-3">タスク一覧</h3>
+            <!-- タスク一覧テーブル -->
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>タスク名</th>
+                    <th>担当者</th>
+                    <th>開始日</th>
+                    <th>期限日</th>
+                    <th>ステータス</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="task : ${taskList}" th:object="${task}">
+                    <td>
+                        <a th:text="*{taskName}" th:href="@{/progress/detail/{taskId}(taskId=${task.taskId})}" class="text-dark">タスク</a>
+                    </td>
+                    <td th:text="*{user.userName}"></td>
+                    <td th:text="*{startDate}"></td>
+                    <td th:text="*{dueDate}"></td>
+                    <td th:text="*{status}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <h3 class="mt-5 mb-3">最近の更新</h3>
+
+            <!-- 進捗更新一覧 項目をループで生成 -->
+            <div class="list-group"  th:each="progress : ${progressList}" th:object="${progress}">
+                <div class="list-group-item bg-white" aria-current="true">
+                    <div class="d-flex w-100 justify-content-between">
+                        <div class="flex-grow-1 me-3">
+                            <p class="mb-2"><span th:text="*{user.userName}">ユーザ</span> さんがタスクを更新</p>
+                            <a class="mb-0 d-block text-dark" th:href="@{/progress/detail/{taskId}(taskId=*{task.taskId})}">
+                                <span th:text="*{task.taskName}" style="text-decoration: underline;">タスク</span>
+                            </a>
+                            <p th:text="*{comment}">タスクコメント</p>
+                            <p class="mb-0">【状態：<span th:text="*{task.status}">ステータス状態</span>】</p>
+                        </div>
+                        <div class="d-flex flex-column justify-content-between align-items-end flex-shrink-0" style="width: 15%;">
+                            <p class="duration text-muted mb-auto" th:text="*{progressDate}">3 hours ago</p>
+                            <a href="#" th:href="@{/progress/detail/{taskId}(taskId=*{task.taskId})}" class="mt-2">
+                                <img th:src="@{/images/message.png}" alt="メッセージ" style="width: 36px; height: 36px;"/>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+</body>
+</html>

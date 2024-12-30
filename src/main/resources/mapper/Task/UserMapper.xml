@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- Mapperとxmlのマッピング-->
+<mapper namespace="com.example.task.domain.auth.UserMapper">
+
+    <!--　マッピング定義（ユーザ） -->
+    <!--　<resultMap type="com.example.task.domain.auth.UserEntity" id="user">  -->
+    <resultMap type="com.example.task.domain.auth.UserEntity" id="user">
+        <id property="userId" column="user_id"/>
+        <result property="userName" column="username"/>
+        <result property="password" column="password"/>
+        <result property="email" column="email"/>
+        <result property="role" column="role"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="token" column="token"/>
+    </resultMap>
+
+<select id="getAllUser" resultMap="user">
+    select * from users
+</select>
+
+<select id="getUserById" resultMap="user">
+    select
+        *
+    from
+        users
+    where
+        user_id = #{userId}
+</select>
+
+<select id="findUser" resultMap="user">
+    select
+        *
+    from
+        users
+    where
+        user_id = #{userId}
+</select>
+
+
+
+<select id="getUserByToken" resultMap="user">
+    select
+        *
+    from
+        users
+    where
+        token = #{token}
+</select>
+
+
+<select id="getCount" resultType="int">
+    select
+        count(*)
+    from
+        users
+</select>
+
+<select id="getUserByAmbiguousName" resultMap="user">
+    select
+        *
+    from
+        users
+    where
+        username like CONCAT('%', #{userName}, '%')
+</select>
+
+<select id="getMaxUserId" resultType="String">
+    select
+        max(user_id)
+    from
+        users
+</select>
+
+<insert id="registUser">
+    insert into users(
+        user_id
+        ,username
+        ,password
+        ,email
+        ,role
+        ,created_at
+        ,updated_at
+    ) values (
+        #{userId}
+        ,#{userName}
+        ,#{password}
+        ,#{email}
+        ,#{role}
+        ,#{createdAt}
+        ,#{updatedAt}
+    )
+</insert>
+
+<update id="updateToken">
+    update
+        users
+    set
+        token = #{token}
+    where
+        user_id = #{userId}
+</update>
+
+<update id="deleteToken">
+    update
+        users
+    set
+        password = #{password}
+        , token = null
+    where
+        user_id = #{userId}
+</update>
+
+<update id="modifyMyInfo">
+    update
+        users
+    set
+        username = #{userName}
+    <if test="email != null and email != ''">
+        ,email = #{email}
+    </if>
+    <if test="password != null and password != ''">
+        ,password = #{password}
+    </if>
+    <if test="role != null and role.name() != ''">
+        ,role = #{role}
+    </if>
+    where
+        user_id = #{userId}
+</update>
+
+<update id="modifyUserInfo">
+    update
+        users
+    set
+        username = #{userName}
+        ,email = #{email}
+    <if test="role != null and role.name() != ''">
+        ,role = #{role}
+    </if>
+    where
+        user_id = #{userId}
+</update>
+
+<delete id="deleteUser">
+    DELETE FROM
+        users
+    WHERE
+        user_id = #{userId}
+</delete>
+
+</mapper>

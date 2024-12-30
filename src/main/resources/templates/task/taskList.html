@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>タスク一覧ページ</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <script th:src="@{/js/deleteConfirm.js}" defer></script>
+    <!-- タスク一覧テーブル -->
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>タスクID</th>
+                <th>タスク名</th>
+                <th>開始日</th>
+                <th>期限日</th>
+                <th>ステータス</th>
+                <th>#</th>
+                <th>#</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="task : ${page}" th:object="${task}">
+                <td th:text="*{taskId}"></td>
+                <td th:text="*{taskName}"></td>
+                <td th:text="*{startDate}"></td>
+                <td th:text="*{dueDate}"></td>
+                <td th:text="*{status}"></td>
+                <td>
+                    <a th:href="@{/task/detail/{taskId}(taskId=${task.taskId})}">詳細</a>
+                </td>
+                <td>
+                    <a th:href="@{/task/delete/{taskId}(taskId=${task.taskId})}"
+                       onclick="return confirmDelete(event, this);">削除</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

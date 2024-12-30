@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>ユーザ登録ページ</title>
+    <th:block th:fragment="head">
+    </th:block>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1>ユーザ情報登録ページ</h1>
+            <form action="#" th:action="@{/user/userRegist}" method="post">
+                <div class="col-md-5 mb-4 mt-4">
+                    <div>パスワードを入力してください。</div>
+                    <input type="password" class="form-control" id="password" name="password" th:value="${password}" minlength="8"/>
+                </div>
+                <div class="col-md-5 mb-3">
+                    <div>確認用のパスワードを入力してください。</div>
+                    <input type="password" class="form-control" id="password2" name="password2"  th:value="${password2}" minlength="8"/>
+                </div>
+                <div class="col-md-5">
+                    <p class="error__text text-danger" id="error__text" style="display: none">入力された値が一致しません。</p>
+                </div>
+
+                <input type="hidden" id="token" name="token" th:value="${token}"/>
+                <input type="hidden" id="userId" name="userId" th:value="${userId}"/>
+                <input type="submit" class="btn btn-primary col-md-5" id="submit_button" value="OK"/>
+            </form>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+        // ボタン要素を取得
+        var button = document.getElementById('submit_button');
+        button.addEventListener('click', function() {
+            console.log("Submitボタンが押されました！");
+            var password1 = document.getElementById('password').value;
+            var password2 = document.getElementById('password2').value;
+
+            console.log(password1);
+            console.log(password2);
+
+
+            if(password1 !== password2) {
+                event.preventDefault();
+                var error_text = document.getElementById('error__text');
+                error_text.style.display = 'block';
+            } else {
+                console.log("else");
+                var error_text = document.getElementById('error__text');
+                error_text.style.display = 'none';
+            }
+        });
+    });
+
+    </script>
+</div>
+
+</body>
+</html>

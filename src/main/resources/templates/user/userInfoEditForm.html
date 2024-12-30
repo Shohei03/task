@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>ユーザ登録ページ</title>
+</head>
+<div layout:fragment="content">
+
+    <div class="container">
+        <div class="py-5 text-center">
+            <h2>ユーザ編集フォーム</h2>
+        </div>
+        <div layout:replace="~{user/userForm::userForm(actionUrl='/user/changeMyInfo')}"></div>
+    </div>
+</div>
+</html>

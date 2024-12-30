@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>ユーザ一覧ページ</title>
+    <th:block th:fragment="head">
+    </th:block>
+</head>
+<body>
+<div layout:fragment="content">
+    <script th:src="@{/js/deleteConfirm.js}" defer></script>
+    <h2>ユーザ一覧</h2>
+
+    <button class="btn btn-primary mt-2 mb-3" type="button" id="myButton">新規登録</button>
+    <div id="dynamicLink"></div>
+    <!-- ユーザ一覧テーブル -->
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>ユーザ名</th>
+                <th>メールアドレス</th>
+                <th>役割</th>
+                <th>招待</th>
+                <th>操作</th>
+                <th>削除</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="user : ${page}" th:object="${user}">
+                <td th:text="*{userId}"></td>
+                <td th:text="*{userName}"></td>
+                <td th:text="*{email}"></td>
+                <td th:text="*{role}"></td>
+                <td>
+                    <!--<a th:href="@{/user/invitations/{userId}(userId=${user.userId})}">招待</a>-->
+                    <a href="#">招待</a>
+                </td>
+                <td>
+                    <a href="#" th:href="@{/user/changeUserInfo/{userId}(userId=${user.userId})}">編集</a>
+                </td>
+                <td>
+                    <a th:href="@{/user/delete/{userId}(userId=${user.userId})}"
+                       onclick="return confirmDelete(event, this);">削除</a>
+                </td>
+            </tr>
+        </tbody>
+
+    </table>
+    <script type="text/javascript" th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+        // ボタン要素を取得
+        var button = document.getElementById('myButton');
+
+        // ボタンにクリックイベントリスナーを追加
+        button.addEventListener('click', function() {
+            const link = /*[[@{/user/regist}]]*/'';
+            // 動的にリンクを生成してHTMLに追加
+            window.location.href = link;
+            //let target = document.getElementById('dynamicLink');
+            //target.innerHTML = '<a href="' + link + '">移動</a>';
+        });
+    });
+
+    </script>
+</div>
+
+</body>
+</html>

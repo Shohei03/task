@@ -1,0 +1,185 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- Mapperとxmlのマッピング-->
+<mapper namespace="com.example.task.domain.progress.ProgressMapper">
+
+    <!--　マッピング定義（タスク） -->
+    <resultMap type="com.example.task.domain.progress.ProgressEntity" id="progress">
+        <id property="progressId" column="progress_id"/>
+        <result property="progressPercent" column="progress_percent"/>
+        <result property="processTime" column="process_time"/>
+        <result property="comment" column="comment"/>
+        <result property="progressDate" column="progress_date"/>
+        <result property="updatedAt" column="updated_at"/>
+        <association property="task" resultMap="task"/>
+        <association property="user" resultMap="user"/>
+    </resultMap>
+
+    <!--　マッピング定義（ユーザ） -->
+    <resultMap type="com.example.task.domain.auth.UserEntity" id="user">
+        <id property="userId" column="user_id"/>
+        <result property="userName" column="username"/>
+        <result property="password" column="password"/>
+        <result property="email" column="email"/>
+        <result property="role" column="role"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <!--　マッピング定義（タスク） -->
+    <resultMap type="com.example.task.domain.task.TaskEntity" id="task">
+        <id property="taskId" column="task_id"/>
+        <result property="taskName" column="task_name"/>
+        <result property="description" column="description"/>
+        <result property="startDate" column="start_date"/>
+        <result property="dueDate" column="due_date"/>
+        <result property="completionDate" column="completion_date"/>
+        <result property="status" column="status"/>
+        <result property="priority" column="priority"/>
+        <result property="scheduleTime" column="schedule_time"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <association property="user" resultMap="user"/>
+    </resultMap>
+
+
+    <resultMap type="com.example.task.domain.api.ApiProgressEntity" id="apiProgress">
+        <id property="id" column="task_id"/>
+        <result property="name" column="task_name"/>
+        <result property="progress" column="progress_percent"/>
+        <result property="description" column="description"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="due_date"/>
+    </resultMap>
+
+
+    <select id="findProgress" resultMap="progress">
+        select
+            *
+        from
+            task_progress p
+        LEFT JOIN tasks t ON p.task_id = t.task_id
+        LEFT JOIN users u ON p.assigned_to = u.user_id
+        order by
+            p.updated_at desc
+        LIMIT 5
+    </select>
+
+    <select id="findProgressByTaskIdDateDesc" resultMap="progress">
+        select
+            *
+        from
+            task_progress p
+        LEFT JOIN
+            tasks t ON p.task_id = t.task_id
+        LEFT JOIN
+            users u ON p.assigned_to = u.user_id
+        where
+            p.task_id = #{taskId}
+        order by
+            p.progress_date desc
+    </select>
+
+    <select id="findProgressByTaskId" resultMap="progress">
+        select
+        *
+        from
+        task_progress p
+        LEFT JOIN
+        tasks t ON p.task_id = t.task_id
+        LEFT JOIN
+        users u ON p.assigned_to = u.user_id
+        where
+        p.task_id = #{taskId}
+    </select>
+
+    <select id="getProgressCountOfTask" resultType="int">
+        select
+            COUNT(progress_id)
+        from
+            task_progress p
+        where
+            p.task_id = #{taskId}
+    </select>
+
+    <select id="getProgressForChart" resultMap="apiProgress">
+        select
+            t.task_id,
+            t.task_name,
+            t.progress_percent,
+            t.description,
+            t.start_date,
+            t.due_date
+        from
+            tasks t
+        LEFT JOIN
+            users u ON t.assigned_to = u.user_id
+    </select>
+
+
+    <select id="getTotalProcessTime" resultType="float">
+        select
+            IFNULL(SUM(process_time), 0)
+        from
+            task_progress
+        Where
+            task_id = #{taskId}
+
+    </select>
+
+    <select id="getProgress" resultMap="progress">
+        select
+            p.progress_percent,
+            t.status,
+            p.process_time,
+            p.comment,
+            p.task_id
+        from
+            task_progress p
+        LEFT JOIN
+            tasks t ON p.task_id = t.task_id
+        Where
+            p.progress_id = #{progressId}
+    </select>
+
+
+
+
+
+    <insert id="registerRecord">
+        insert into task_progress(
+              task_id
+            , assigned_to
+            , progress_percent
+            , process_time
+            , comment
+        ) values (
+              #{progressForm.taskId}
+            , #{userId}
+            , #{progressForm.progressPercent}
+            , #{progressForm.processTime}
+            , #{progressForm.comment}
+        )
+
+    </insert>
+
+    <update id="updateRecord">
+        update
+            task_progress
+        set
+            progress_percent = #{progress.progressPercent},
+            process_time = #{progress.processTime},
+            comment = #{progress.comment}
+        where
+            progress_id = #{progressId}
+    </update>
+
+    <update id="deleteRecord">
+        delete
+        from
+            task_progress
+        where
+            progress_id = #{progressId}
+    </update>
+
+</mapper>

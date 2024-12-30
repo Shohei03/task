@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- プロパティ定義 -->
+    <property name="logFileName" value="application" />
+
+    <!-- 開発環境用設定 -->
+    <springProfile name="dev">
+        <property name="logFilePath" value="/var/log/dev/" />
+        <property name="logLevel" value="INFO" />
+    </springProfile>
+
+    <!-- UAT環境用設定 -->
+    <springProfile name="uat">
+        <property name="logFilePath" value="/var/log/uat/" />
+        <property name="logLevel" value="INFO" />
+    </springProfile>
+
+    <!-- 本番環境用設定 -->
+    <springProfile name="prod">
+        <property name="logFilePath" value="/var/log/production/" />
+        <property name="logLevel" value="INFO" />
+    </springProfile>
+
+    <!-- コンソール出力 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.out</target>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{yyyy/MM/dd HH:mm:ss} %-5level [%thread] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- アプリケーションログのファイル書き出し -->
+    <appender name="APPLICATION_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- ファイル名設定 -->
+        <file>${logFilePath}${logFileName}.log</file>
+        <!-- ログファイルのローテーション設定 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logFilePath}${logFileName}-%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+        <!-- ログ出力フォーマット設定 -->
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{yyyy/MM/dd HH:mm:ss} %-5level [%thread] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- ロガー設定 -->
+    <logger name="appLogger" level="${logLevel}">
+        <appender-ref ref="APPLICATION_LOG" />
+    </logger>
+
+    <!-- ルートロガー設定 -->
+    <root level="${logLevel}">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>

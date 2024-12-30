@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{index.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="row justify-content-center" layout:fragment="userForm">
+    <script th:src="@{/js/passwordCheck.js}" defer></script>
+    <div class="col-md-8 order-md-1">
+
+    <form action="#" th:action="${actionUrl}" method="post" class="needs-validation" th:object="${userForm}" novalidate>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="userId">ユーザID</label>
+                <input type="text" class="form-control w-50" id="userId" name="userId" th:value="*{userId}" readonly>
+                <div class="invalid-feedback">
+                    Please enter a valid email address for shipping updates.
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="userNameSei">姓</label>
+                <input type="text" class="form-control" id="userNameSei" name="userNameSei" th:value="*{userNameSei}"  th:errorclass="is-invalid" required>
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('userNameSei')}" th:errors="*{userNameSei}"></div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="userNameMei">名</label>
+                <input type="text" class="form-control" id="userNameMei" name="userNameMei" th:value="*{userNameMei}" th:errorclass="is-invalid" required>
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('userNameMei')}" th:errors="*{userNameMei}"></div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email" th:value="*{email}" th:errorclass="is-invalid" placeholder="you@example.com">
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+        </div>
+        <div th:if="${actionUrl == '/user/changeMyInfo'}">
+            <div class="mb-3">
+                <div>パスワードを修正する場合は、入力してください。</div>
+                <input type="password" class="form-control" id="password" name="password" th:value="${password}" th:errorclass="is-invalid" minlength="8" required/>
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+            </div>
+            <div class="mb-3">
+                <div>確認用のパスワードを入力してください。</div>
+                <input type="password" class="form-control" id="password2" name="password2" th:value="${password2}" minlength="8" required/>
+            </div>
+            <p class="error__text text-danger" id="error__text" style="display: none">入力されたパスワードが一致しません。</p>
+        </div>
+
+        <div sec:authorize="hasRole('ADMIN')"  class="row">
+            <div class="col-md-5 mb-3">
+                <label for="authority">権限</label>
+                <select class="custom-select d-block w-100" id="authority" name="authority" th:errorclass="is-invalid" required>
+                    <option value="ROLE_USER" th:selected="*{authority == 'ROLE_USER'}">USER</option>
+                    <option value="ROLE_ADMIN" th:selected="*{authority == 'ROLE_ADMIN'}">ADMIN</option>
+                </select>
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('authority')}" th:errors="*{authority}"></div>
+            </div>
+
+            <hr class="mb-4">
+        </div>
+        <hr class="mb-4">
+        <div th:if="${actionUrl == '/user/regist'}">
+            <button class="btn btn-primary btn-lg btn-block actionButton" type="submit">登録</button>
+        </div>
+        <div th:if="${actionUrl == '/user/changeMyInfo'}">
+            <button class="btn btn-primary btn-lg btn-block actionButton" type="submit">更新</button>
+        </div>
+        <div th:if="${actionUrl == '/user/changeUserInfo'}">
+            <button class="btn btn-primary btn-lg btn-block actionButton" type="submit">更新</button>
+        </div>
+
+    </form>
+    </div>
+</div>
+
+</body>
+</html>

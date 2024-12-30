@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{index.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="row justify-content-center" layout:fragment="taskForm">
+    <script th:src="@{/js/date.js}" defer></script>
+    <script th:src="@{/js/nameCandidates.js}" defer></script>
+    <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-md-10 order-md-1">
+            <form action="#" th:action="${actionUrl}" method="post" class="needs-validation" th:object="${taskForm}"  novalidate >
+                <div class="row">
+                    <div class="col-md-9 mb-3">
+                        <label for="taskName">タスク名</label>
+                        <input type="text" class="form-control" id="taskName" th:field="*{taskName}"  th:errorclass="is-invalid" required>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('taskName')}" th:errors="*{taskName}"></div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="description">タスクの詳細説明</label>
+                    <div class="input-group">
+                        <textarea class="form-control" id="description" th:field="*{description}" th:errorclass="is-invalid" cols="80" rows="5"></textarea>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="user">担当者</label>
+                    <input type="text" class="form-control" id="user" th:field="*{userName}" th:errorclass="is-invalid">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></div>
+                    <input type="hidden" id="userId" th:field="*{userId}">
+                    <div id="autocompleteList" class="list-group my-2"></div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-5 mb-3">
+                        <label for="status">タスクのステータス</label>
+                        <select class="custom-select d-block w-100" id="status" th:field="*{status}" th:errorclass="is-invalid" required>
+                            <option value="未実施">未実施</option>
+                            <option value="実施中">実施中</option>
+                            <option value="完了">完了</option>
+                            <option value="保留">保留</option>
+                            <option value="中止">中止</option>
+                        </select>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="priority">タスクの優先度</label>
+                        <select class="custom-select d-block w-100" id="priority" name="priority" th:field="*{priority}" th:errorclass="is-invalid" required>
+                            <option value="">Choose...</option>
+                            <option value="高">高</option>
+                            <option value="中">中</option>
+                            <option value="低">低</option>
+                        </select>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('priority')}" th:errors="*{priority}"></div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="scheduleTime">予定時間</label>
+                        <input type="text" class="form-control" id="scheduleTime" th:field="*{scheduleTime}"  name="scheduleTime" pattern="\d*" th:errorclass="is-invalid" title="数字のみを入力してください。" required>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('scheduleTime')}" th:errors="*{scheduleTime}"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5 mb-3">
+                        <label for="startDate">タスクの開始日</label>
+                        <input id="startDate" name="startDate" type="date" th:field="*{startDate}" th:errorclass="is-invalid" required/>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></div>
+                    </div>
+                    <div class="col-md-5 mb-3">
+                        <label for="dueDate">タスクの期日</label>
+                        <input id="dueDate" name="dueDate" type="date" th:field="*{dueDate}" th:classappend="${actionUrl == '/task/new'} ? 'date2' : 'dueDate'" th:errorclass="is-invalid" required/>
+                    </div>
+                </div>
+                <p th:if="${#fields.hasErrors('dueDate')}" th:errors="*{dueDate}" style="color: red; font-size: 0.9rem;" class="mb-0 pb-0"></p>
+
+                <input type="hidden"  th:field="*{taskId}"/>
+
+                <hr class="mb-4">
+                <button class="btn btn-primary btn-block" type="submit" th:if="${actionUrl == '/task/new'}">登録</button>
+                <button class="btn btn-primary btn-block" type="submit" th:if="${actionUrl == '/task/edit'}">更新</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
